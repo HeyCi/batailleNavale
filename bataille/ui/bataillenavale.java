@@ -1,6 +1,5 @@
 package adrar.bataille.ui;
 
-import java.awt.EventQueue;
 import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -9,36 +8,16 @@ import java.awt.Color;
 import java.awt.Cursor;
 import javax.swing.JPanel;
 
-import adrar.bataille.ui.Datas.Grid;
-import adrar.bataille.ui.Datas.GridPosition;
-import adrar.bataille.ui.Enums.GridNumber;
-import adrar.bataille.ui.Enums.Letter;
+import adrar.bataille.ui.Abstract.AbstractIA;
+import adrar.bataille.ui.Datas.*;
+import adrar.bataille.ui.Enums.*;
 
 public class bataillenavale {
 
-	private JFrame frame;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		new Grid();
-		
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					bataillenavale window = new bataillenavale();
-					window.GenerateMap();
-					
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	public JFrame frame;
+	public AbstractIA ia;
+	public Grid grid;
+	
 	/**
 	 * Create the application.
 	 */
@@ -57,8 +36,10 @@ public class bataillenavale {
 		frame.setResizable(false);
 	}
 	
-	private void GenerateMap()
+	public void GenerateMap()
 	{
+		grid = new Grid();
+		
 		int startX = 80;
 		int startY = 0;
 		int currentX = startX;
@@ -67,7 +48,6 @@ public class bataillenavale {
 		int sizeLabelY = 50;
 		int sizeCanvasX = sizeLabelX;
 		int sizeCanvasY = 50;
-		Random rColor = new Random();
 
 		for (Letter letter : Letter.values())
 		{			
@@ -84,10 +64,8 @@ public class bataillenavale {
 			frame.getContentPane().add(CreateLabel(number.getValue() + "", currentX, currentY, sizeLabelX, sizeLabelY));
 			currentX += sizeLabelX;
 			
-			for (Letter letter : Letter.values()) {
-				Color color = new Color(rColor.nextInt(255), rColor.nextInt(255), rColor.nextInt(255));				
-				CreateCase(Grid.instance.getPosition(letter,  number), currentX, currentY, sizeCanvasX, sizeCanvasY, color);
-				
+			for (Letter letter : Letter.values()) {		
+				CreateCase(grid.getPosition(letter,  number), currentX, currentY, sizeCanvasX, sizeCanvasY);
 				currentX += sizeCanvasX;
 			}
 			
@@ -109,13 +87,14 @@ public class bataillenavale {
 
 		return label;
 	}
-	private void CreateCase(GridPosition position, int x, int y, int sizeX, int sizeY, Color color)
+	private void CreateCase(GridPosition position, int x, int y, int sizeX, int sizeY)
 	{
 		JPanel panel = new JPanel();
 		panel.setLocation(x, y);
 		panel.setSize(sizeX, sizeY);
-		panel.setBackground(color);
-		panel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		panel.setBackground(Color.GRAY);
+		panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		panel.setEnabled(false);
 		
 		JLabel label = CreateLabel(position.getKey(), x, y, sizeX, sizeY);
 		label.setForeground(Color.yellow);
@@ -125,4 +104,44 @@ public class bataillenavale {
 		position.setPanel(panel);		
 		frame.getContentPane().add(panel);
 	}
+
+	public void createShipsForIA()
+	{
+		//random selection test (not working)
+		
+		ShipDirection[] directions = ShipDirection.values();
+		Letter[] letters = Letter.values();
+		GridNumber[] numbers = GridNumber.values();
+		
+		Random rand = new Random();
+		
+		for (ShipType shipType : ShipType.values()) {
+			
+			ShipDirection direction = directions[rand.nextInt(directions.length)];
+			Ship ship = null;
+			
+			do {
+				GridPosition position = grid.getPosition(letters[rand.nextInt(letters.length)], numbers[rand.nextInt(numbers.length)]);
+				ship = grid.createShip(position, direction, shipType);
+			}
+			while (ship == null);
+			
+			ia.addShip(ship);
+		}
+	}
+	
+	public void handSelection()
+	{
+		grid.activeSelection();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

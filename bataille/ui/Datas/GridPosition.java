@@ -5,18 +5,19 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 
-import adrar.bataille.ui.Enums.GridNumber;
-import adrar.bataille.ui.Enums.Letter;
+import adrar.bataille.ui.Enums.*;
 
 public class GridPosition {
 
+	private Grid grid;
 	private Letter letter;
 	private GridNumber number;
 	private JPanel panelUI;
 	private Ship shipInCase;
 	
-	public GridPosition(Letter letter, GridNumber number)
+	public GridPosition(Grid grid, Letter letter, GridNumber number)
 	{
+		this.grid = grid;
 		this.letter = letter;
 		this.number = number;
 	}
@@ -28,7 +29,7 @@ public class GridPosition {
 		this.panelUI.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				onSelectCase();
+				onSelectCase(arg0);
 			}
 		});
 	}
@@ -65,8 +66,24 @@ public class GridPosition {
 		return this.shipInCase;
 	}
 
-	private void onSelectCase()
+	private void onSelectCase(MouseEvent evt)
 	{
+		ShipDirection direction = ShipDirection.Horizontal;
+		ShipType shipToSpawn;
 		
+		if (evt.getButton() == 3)
+			direction = ShipDirection.Vertical;
+		
+		shipToSpawn = grid.ui.ia.getShipToSpawn();
+		if (shipToSpawn == null)
+			return;
+
+		Ship ship = grid.createShip(this, direction, shipToSpawn);
+		
+		if (ship == null)
+			return;
+		
+		grid.ui.ia.nextShipToSpawn();
+		grid.ui.ia.addShip(ship);
 	}
 }
