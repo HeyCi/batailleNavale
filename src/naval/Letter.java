@@ -9,7 +9,7 @@ public enum Letter {
 		this.valeurDeLigne = valeurDeLigne;
 	}
 
-	public int getValeurDeColonne() {
+	public int getValeurDeLigne() {
 		return valeurDeLigne;
 	}
 }
