@@ -16,14 +16,16 @@ public class Grid {
 		}
 	}
 
-	public void placeBoat(BoatType boatType, Orientation orientation) {
-		Boat boat = new Boat(boatType, orientation);
+	public void placeBoat(BoatType boatType) {
+		Orientation orientation = Orientation.values()[(int) Math.floor((Math.random() * Orientation.values().length))]; // orientation
+																															// aléatoire
+		Boat boat = new Boat(boatType);
 		int numberOfOccupiedCases = 0;
+		int indexCaseDepart = (int) Math.floor((Math.random() * caseList.size())); // case de départ aléatoire
+		int coordColonneDepart = caseList.get(indexCaseDepart).getCoordColonne().getValeurDeColonne();
+		int coordLigneDepart = caseList.get(indexCaseDepart).getCoordLigne().getValeurDeLigne();
 
-		if (boat.getOrientation() == Orientation.Horizontal) {
-			int indexCaseDepart = (int) Math.floor((Math.random() * caseList.size()));
-			int coordColonneDepart = caseList.get(indexCaseDepart).getCoordColonne().getValeurDeColonne();
-			int coordLigneDepart = caseList.get(indexCaseDepart).getCoordLigne().getValeurDeLigne();
+		if (orientation == Orientation.Horizontal) {
 			for (int i = 0; i < boat.getBoatType().getTaille(); i++) {
 				for (Case currentCase : caseList) {
 					if (currentCase.getCoordColonne().getValeurDeColonne() == coordColonneDepart
@@ -43,12 +45,9 @@ public class Grid {
 						}
 					}
 				}
-				placeBoat(boatType, orientation);
+				placeBoat(boatType);
 			}
-		} else if (boat.getOrientation() == Orientation.Vertical) {
-			int indexCaseDepart = (int) Math.floor((Math.random() * caseList.size()));
-			int coordColonneDepart = caseList.get(indexCaseDepart).getCoordColonne().getValeurDeColonne();
-			int coordLigneDepart = caseList.get(indexCaseDepart).getCoordLigne().getValeurDeLigne();
+		} else if (orientation == Orientation.Vertical) {
 			for (int i = 0; i < boat.getBoatType().getTaille(); i++) {
 				for (Case currentCase : caseList) {
 					if (currentCase.getCoordColonne().getValeurDeColonne() == coordColonneDepart + i
@@ -68,7 +67,7 @@ public class Grid {
 						}
 					}
 				}
-				placeBoat(boatType, orientation);
+				placeBoat(boatType);
 			}
 		}
 	}

@@ -5,15 +5,13 @@ import java.util.List;
 
 public class Boat {
 	private BoatType boatType;
-	private Orientation orientation;
 	private List<Case> localisation;
 	private int life;
 
-	public Boat(BoatType bateau, Orientation orientation) {
+	public Boat(BoatType bateau) {
 		setBoatType(bateau);
 		// @TODO : a supprimer si non utilisé
 		localisation = new ArrayList<>();
-		setOrientation(orientation);
 		setLife(bateau.getTaille());
 	}
 
@@ -24,14 +22,6 @@ public class Boat {
 	// ----------------------------
 	// -- GETTER SETTER -----------
 	// ----------------------------
-	public Orientation getOrientation() {
-		return orientation;
-	}
-
-	public void setOrientation(Orientation orientation) {
-		this.orientation = orientation;
-	}
-
 	public BoatType getBoatType() {
 		return boatType;
 	}
