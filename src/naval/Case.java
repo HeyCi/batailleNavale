@@ -1,13 +1,12 @@
 package naval;
 
 public class Case {
-	private Letter coordLigne;
-	private Number coordColonne;
+	private Position position;
 	private Boat boat;
 
-	public Case(Letter coordLigne, Number coordColonne) {
-		setCoordLigne(coordLigne);
-		setCoordColonne(coordColonne);
+	public Case(Position position) {
+		this.position = position;
+		boat = null;
 	}
 
 	// ----------------------------
@@ -21,20 +20,7 @@ public class Case {
 		return boat;
 	}
 
-	public Letter getCoordLigne() {
-		return coordLigne;
+	public Position getPosition() {
+		return position;
 	}
-
-	public void setCoordLigne(Letter coordLigne) {
-		this.coordLigne = coordLigne;
-	}
-
-	public Number getCoordColonne() {
-		return coordColonne;
-	}
-
-	public void setCoordColonne(Number coordColonne) {
-		this.coordColonne = coordColonne;
-	}
-
 }
