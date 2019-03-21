@@ -16,24 +16,37 @@ public class Grid {
 		}
 	}
 
-	public void placeBoat() {
-		Boat boat = new Boat(BoatType.SousMarin, Orientation.Horizontal);
-		for (int i = 0; i < BoatType.SousMarin.getTaille(); i++) {
-			Case caseSuivante = caseList.get(26 + i);
-			caseSuivante.setBoat(boat);
-		}
-	}
-
-	public void placeBoat2(BoatType boatType, Orientation orientation) {
+	public void placeBoat(BoatType boatType, Orientation orientation) {
 		Boat boat = new Boat(boatType, orientation);
+		int numberOfOccupiedCases = 0;
+
 		if (boat.getOrientation() == Orientation.Horizontal) {
-			int indexCaseDepart = 41;
+			int indexCaseDepart = (int) Math.floor((Math.random() * caseList.size()));
+			int coordColonneDepart = caseList.get(indexCaseDepart).getCoordColonne().getValeurDeColonne();
+			int coordLigneDepart = caseList.get(indexCaseDepart).getCoordLigne().getValeurDeLigne();
 			for (int i = 0; i < boat.getBoatType().getTaille(); i++) {
-				Case caseSuivante = caseList.get(indexCaseDepart + i);
-				caseSuivante.setBoat(boat);
+				for (Case currentCase : caseList) {
+					if (currentCase.getCoordColonne().getValeurDeColonne() == coordColonneDepart
+							&& currentCase.getCoordLigne().getValeurDeLigne() == coordLigneDepart + i) {
+						currentCase.setBoat(boat);
+						numberOfOccupiedCases++;
+					}
+				}
+			}
+			if (numberOfOccupiedCases < boat.getBoatType().getTaille()) {
+				for (int i = 0; i < boat.getBoatType().getTaille(); i++) {
+					for (Case currentCase : caseList) {
+						if (currentCase.getCoordColonne().getValeurDeColonne() == coordColonneDepart
+								&& currentCase.getCoordLigne().getValeurDeLigne() == coordLigneDepart + i) {
+							currentCase.setBoat(null);
+							numberOfOccupiedCases--;
+						}
+					}
+				}
+				placeBoat(boatType, orientation);
 			}
 		} else if (boat.getOrientation() == Orientation.Vertical) {
-			int indexCaseDepart = 41;
+			int indexCaseDepart = (int) Math.floor((Math.random() * caseList.size()));
 			int coordColonneDepart = caseList.get(indexCaseDepart).getCoordColonne().getValeurDeColonne();
 			int coordLigneDepart = caseList.get(indexCaseDepart).getCoordLigne().getValeurDeLigne();
 			for (int i = 0; i < boat.getBoatType().getTaille(); i++) {
@@ -41,8 +54,21 @@ public class Grid {
 					if (currentCase.getCoordColonne().getValeurDeColonne() == coordColonneDepart + i
 							&& currentCase.getCoordLigne().getValeurDeLigne() == coordLigneDepart) {
 						currentCase.setBoat(boat);
+						numberOfOccupiedCases++;
 					}
 				}
+			}
+			if (numberOfOccupiedCases < boat.getBoatType().getTaille()) {
+				for (int i = 0; i < boat.getBoatType().getTaille(); i++) {
+					for (Case currentCase : caseList) {
+						if (currentCase.getCoordColonne().getValeurDeColonne() == coordColonneDepart + i
+								&& currentCase.getCoordLigne().getValeurDeLigne() == coordLigneDepart) {
+							currentCase.setBoat(null);
+							numberOfOccupiedCases--;
+						}
+					}
+				}
+				placeBoat(boatType, orientation);
 			}
 		}
 	}
@@ -53,9 +79,9 @@ public class Grid {
 	public void showGrid() {
 		for (Case currentCase : caseList) {
 			if (currentCase.getBoat() == null) {
-				System.out.print("O");
+				System.out.print("O ");
 			} else {
-				System.out.print("X");
+				System.out.print("X ");
 			}
 			if (currentCase.getCoordLigne() == Letter.J) {
 				System.out.println(" ");
