@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Game {
+public class BoatGrid {
 	private static final String BOAT_CASE = "X ";
 	private static final String EMPTY_CASE = ". ";
 	private Map<Position, Case> caseList;
 
-	public Game() {
+	public BoatGrid() {
 		caseList = new HashMap<>();
 		for (Number number : Number.values()) {
 			for (Letter letter : Letter.values()) {
@@ -24,7 +24,6 @@ public class Game {
 		Letter randomLigne = Letter.values()[(int) Math.floor((Math.random() * Letter.values().length))];
 		Number randomColonne = Number.values()[(int) Math.floor((Math.random() * Number.values().length))];
 		Position randomPosition = new Position(randomLigne, randomColonne);
-		System.out.println(randomColonne + "" + randomLigne);
 		return randomPosition;
 	}
 
@@ -35,6 +34,11 @@ public class Game {
 
 	public ArrayList<Position> generatePositionList(Boat boat, Position positionDepart, Orientation orientation) {
 		ArrayList<Position> boatCaseList = new ArrayList<>();
+		// vérifier si ça va dépasser de la grille :
+		if (positionDepart.getValeurCoordColonne() + boat.getBoatType().getTaille() > Letter.values().length
+				|| positionDepart.getValeurCoordLigne() + boat.getBoatType().getTaille() > Number.values().length) {
+			return null;
+		}
 		for (int i = 0; i < boat.getBoatType().getTaille(); i++) {
 			if (orientation == Orientation.Vertical) {
 				Letter ligne = Letter.values()[(positionDepart.getValeurCoordLigne()) + i];
@@ -51,8 +55,7 @@ public class Game {
 		return boatCaseList;
 	}
 
-	public boolean checkIfBoatFits(ArrayList<Position> positionListToTest) { // TODO comment tester si ça depasse de la
-																				// grille ????
+	public boolean checkIfBoatFits(ArrayList<Position> positionListToTest) {
 		boolean isFree = true;
 		for (Position positionToTest : positionListToTest) {
 			Case caseToTest = caseList.get(positionToTest);
@@ -78,9 +81,23 @@ public class Game {
 			Orientation randomOrientation = generateRandomOrientation();
 			Position randomPositionDepart = getRandomPosition();
 			generatedPositionList = generatePositionList(boat, randomPositionDepart, randomOrientation);
-			boatFits = checkIfBoatFits(generatedPositionList);
+			if (generatedPositionList != null) {
+				boatFits = checkIfBoatFits(generatedPositionList);
+			}
 		}
 		setBoatInCases(boat, generatedPositionList);
+	}
+
+	public CaseStatus checkCaseStatus(Position position) {
+		Case caseToCheck = caseList.get(position);
+		if (caseToCheck.getBoat() == null) {
+			return CaseStatus.Eau;
+		} else if (caseToCheck.getBoat().getLife() == 0) {
+			return CaseStatus.Coule;
+		} else {
+			caseToCheck.getBoat().setLife(caseToCheck.getBoat().getLife() - 1);
+			return CaseStatus.Touche;
+		}
 	}
 
 	public void showGrid() {

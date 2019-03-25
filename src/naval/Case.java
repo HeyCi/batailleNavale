@@ -3,10 +3,12 @@ package naval;
 public class Case {
 	private Position position;
 	private Boat boat;
+	private CaseStatus caseStatus;
 
 	public Case(Position position) {
 		this.position = position;
 		boat = null;
+		setCaseStatus(CaseStatus.Libre);
 	}
 
 	// ----------------------------
@@ -22,5 +24,13 @@ public class Case {
 
 	public Position getPosition() {
 		return position;
+	}
+
+	public CaseStatus getCaseStatus() {
+		return caseStatus;
+	}
+
+	public void setCaseStatus(CaseStatus caseStatus) {
+		this.caseStatus = caseStatus;
 	}
 }

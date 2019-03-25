@@ -4,6 +4,30 @@ public class Position {
 	private Letter nomCoordLigne;
 	private Number nomCoordColonne;
 
+	@Override
+	public boolean equals(Object arg0) {
+		if (arg0 == null) {
+			return false;
+		} else {
+			Position positionToCompare = (Position) arg0;
+			if (this == positionToCompare) {
+				return true;
+			}
+			if (nomCoordColonne == positionToCompare.nomCoordColonne
+					&& nomCoordLigne == positionToCompare.nomCoordLigne) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		int hashCode = getValeurCoordLigne() * Letter.values().length + getValeurCoordColonne();
+		return hashCode;
+	}
+
 	public Position(Letter nomCoordLigne, Number nomCoordColonne) {
 		setNomCoordLigne(nomCoordLigne);
 		setNomCoordColonne(nomCoordColonne);
