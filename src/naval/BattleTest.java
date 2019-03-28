@@ -10,10 +10,14 @@ public class BattleTest {
 		boatGrid.showGrid();
 
 		ShotGrid shotGrid = new ShotGrid();
-		Position position = shotGrid.shoot();
-		CaseStatus caseStatus = boatGrid.checkCaseStatus(position);
-		shotGrid.updateCase(position, caseStatus);
-
+//		for (Position position : shotGrid.getTargetList()) {
+//			System.out.println(position.getNomCoordColonne() + " : " + position.getNomCoordLigne());
+//		}
+		while (shotGrid.getNbCoule() < 5) {
+			Position position = shotGrid.shoot();
+			CaseStatus caseStatus = boatGrid.checkCaseStatus(position);
+			shotGrid.updateCase(position, caseStatus);
+		}
 		System.out.println(" ");
 		shotGrid.showGrid();
 	}

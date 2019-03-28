@@ -60,7 +60,22 @@ public class BoatGrid {
 		for (Position positionToTest : positionListToTest) {
 			Case caseToTest = caseList.get(positionToTest);
 			if (caseToTest.getBoat() != null) {
-				isFree = false;
+				return false;
+			}
+			for (int i = -1; i < 2; i++) {
+				for (int j = -1; j < 2; j++) {
+					int indexColonne = positionToTest.getValeurCoordColonne() + i;
+					int indexLigne = positionToTest.getValeurCoordLigne() + j;
+					if (indexLigne < Letter.values().length && indexColonne < Number.values().length
+							&& indexColonne >= 0 && indexLigne >= 0) {
+						Position surroundingPosition = new Position(Letter.values()[indexLigne],
+								Number.values()[indexColonne]);
+						Case caseSurrounding = caseList.get(surroundingPosition);
+						if (caseSurrounding.getBoat() != null) {
+							return false;
+						}
+					}
+				}
 			}
 		}
 		return isFree;
@@ -92,11 +107,13 @@ public class BoatGrid {
 		Case caseToCheck = caseList.get(position);
 		if (caseToCheck.getBoat() == null) {
 			return CaseStatus.Eau;
-		} else if (caseToCheck.getBoat().getLife() == 0) {
-			return CaseStatus.Coule;
 		} else {
 			caseToCheck.getBoat().setLife(caseToCheck.getBoat().getLife() - 1);
-			return CaseStatus.Touche;
+			if (caseToCheck.getBoat().getLife() == 0) {
+				return CaseStatus.Coule;
+			} else {
+				return CaseStatus.Touche;
+			}
 		}
 	}
 

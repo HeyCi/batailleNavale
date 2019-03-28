@@ -1,7 +1,7 @@
 package naval;
 
 public enum Number {
-	UN(1), DEUX(2), TROIS(3), QUATRE(4), CINQ(5), SIX(6), SEPT(7), HUIT(8), NEUF(9), DIX(10);
+	UN(0), DEUX(1), TROIS(2), QUATRE(3), CINQ(4), SIX(5), SEPT(6), HUIT(7), NEUF(8), DIX(9);
 
 	private int valeurDeColonne;
 
